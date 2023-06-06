@@ -27,6 +27,7 @@
 import TopLine from "@/components/common/TopLine.vue";
 import NavLine from "@/components/common/NavLine.vue";
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 export default {
   name: "DepositMoney",
@@ -55,13 +56,20 @@ export default {
     {
       if(amount<=0)
       {
-        alert("请输入合法的金额。");
+        ElMessage.warning("请输入合法的金额。");
+        return;
+      }
+      if(amount>5000)
+      {
+        ElMessage.warning("请不要充值超过5000元。");
+        return;
       }
       axios.put(`/api/accounts/${account.id}`,{"amount":amount},{headers:{'jwt': `${this.jwt}`}})
           .then((response)=>{
-            alert(response.data.message);
+            if(response.data.result===0) ElMessage.success(response.data.message);
+            else ElMessage.error(response.data.message);
           })
-          .catch(function (){alert("网络错误")});
+          .catch(function (){ElMessage.error("网络错误")});
       //this.$router.push('/accountmanage');
     }
   }
@@ -76,10 +84,14 @@ export default {
   position: relative;
 }
 #mainBlock{
+  position: relative;
   margin:0 auto;
-  background-color: rgba(255, 255, 255, 0.8);;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  top:-26px;
   width:100%;
   text-align: center;
+  z-index: 0;
   height: calc(100vh - 150px);
 }
 

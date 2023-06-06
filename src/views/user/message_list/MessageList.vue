@@ -7,7 +7,7 @@
       <p>通知公告</p>
     </div>
     <div id="secondFloor">
-              <p v-if="messages.length===0">暂无消息</p>
+              <p style="margin: 0 auto" v-if="messages.length===0">暂无消息</p>
       <div v-else class="schedule-list" style="margin: 0 auto; text-align: center;">
         <el-table :resize-sensor="false" :data="messages" style="width: 100%" :stripe="true" :border="true" :fit="false">
           <el-table-column type="index" label="序号" width="100px"></el-table-column>
@@ -88,10 +88,14 @@ export default {
 }
 
 #mainBlock{
+  position: relative;
   margin:0 auto;
-  background-color: rgba(255, 255, 255, 0.8);;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  top:-26px;
   width:100%;
   text-align: center;
+  z-index: 0;
   height: calc(100vh - 150px);
 }
 

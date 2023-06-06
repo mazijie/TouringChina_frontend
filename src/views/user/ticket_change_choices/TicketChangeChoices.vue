@@ -4,7 +4,7 @@
     <div id="nav"><NavLine @turnToBillsManage="turnToBillsManage" @turnToAccountManage="turnToAccountManage" @logout="logout"/></div>
     <div id="mainBlock">
         <div id="introduceWord">
-            <p>可改签订单</p>
+            <p>请选择改签车次</p>
         </div>
         <div id="secondFloor">
                 <p v-if="schedules.length===0">很抱歉，没有可以改签的车次</p>
@@ -95,7 +95,8 @@ export default {
       {
         axios.put(`/api/tickets/${billid}`,
             {"new_schedule_id": row.id,
-                  "carriage_id": carriage.carriage.id},{headers:{'jwt':`${this.jwt}`}})
+                  "carriage_id": carriage.carriage.id
+            },{headers:{'jwt':`${this.jwt}`}})
             .then((response)=>
             {
               if(response.data.result===0)

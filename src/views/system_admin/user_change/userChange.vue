@@ -319,7 +319,7 @@ export default {
 <style>
 
 .contain {
-	max-width: 350px;
+	/*max-width: 350px;*/
   height: calc(100vh - 150px);
 	margin: 150px auto;
 	padding: 40px;

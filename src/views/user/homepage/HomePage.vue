@@ -108,6 +108,7 @@
 import TopLine from "@/components/common/TopLine.vue";
 import NavLine from "@/components/common/NavLine.vue";
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 export default {
     name: "QueryTrain",
@@ -170,17 +171,17 @@ export default {
             // alert(this.departTime);
             if(this.departTime==null)
             {
-              alert("请选择时间！");
+                ElMessage.warning("请选择时间！");
               return;
             }
             if(this.departure==null)
             {
-              alert("请选择出发地！");
+                ElMessage.warning("请选择出发地！");
               return;
             }
             if(this.destination==null)
             {
-              alert("请选择目的地！");
+                ElMessage.warning("请选择目的地！");
               return;
             }
             this.$store.dispatch('storeDepartTime',this.departTime);
@@ -206,7 +207,7 @@ export default {
     margin:0 auto;
     background-color: rgba(255, 255, 255, 0.8);;
     width:100%;
-    height: 100vh;
+    /*height: 100vh;*/
     text-align: center;
   z-index: 0;
 }

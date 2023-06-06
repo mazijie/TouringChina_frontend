@@ -191,15 +191,19 @@ export default {
 }
 #nav{
   position: relative;
+  padding: 0;
+  margin: 0;
 }
 
 #mainBlock{
+  position: relative;
   margin:0 auto;
+  padding: 0;
   background-color: rgba(255, 255, 255, 0.8);
-  top:0px;
+  top:0;
   width:100%;
   text-align: center;
-  z-index: 10;
+  z-index: 0;
   height: calc(100vh - 150px);
 }
 
@@ -220,15 +224,15 @@ export default {
 #secondFloor{
   position: relative;
   top:50px;
+  margin: 0 auto;
   padding: 0;
-  margin: 0;
   display: flex;
 }
 
 #money{
-  position: absolute;
+  position: relative;
   top:0px;
-  left:50px;
+  margin: 0 auto;
   width:600px;
   padding-top: 100px;
 }
@@ -247,7 +251,7 @@ export default {
 .card-grid {
   position: relative;
   top:20px;
-  left:750px;
+  margin: 0 auto;
   width:600px;
   display: grid;
   grid-template-rows: repeat(7, 1fr); /* 三列网格 */

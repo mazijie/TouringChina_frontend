@@ -51,6 +51,7 @@ export default {
     font-weight: bold;
     position:relative;
     width: 100%;
+    margin: 0;
   }
 
   nav ul {

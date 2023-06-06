@@ -37,6 +37,7 @@
 import NavLine from "@/components/common/NavLine.vue";
 import TopLine from "@/components/common/TopLine.vue";
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 export default {
   name: "ContactAdd",
@@ -84,19 +85,23 @@ export default {
       }
       if(this.Name===null)
       {
-        alert("请填写联系人姓名");
+        ElMessage.warning("请填写联系人姓名");
+        return;
       }
       if(this.gender===null)
       {
-        alert("请填写性别");
+        ElMessage.warning("请填写性别");
+        return;
       }
       if(this.birthdate===null)
       {
-        alert("请填写出生日期");
+        ElMessage.warning("请填写出生日期");
+        return;
       }
       if(this.id_card===null)
       {
-        alert("请填写身份整好");
+        ElMessage.warning("请填写身份证号");
+        return;
       }
       axios.post('api/contacts/',
           {
@@ -108,15 +113,15 @@ export default {
           .then(function(response){
             if(response.data.result!==0)
             {
-              alert(response.data.message);
+              ElMessage.error(response.data.message);
             }
             else
             {
-              alert("添加成功！");
+              ElMessage.success("添加成功！");
             }
           })
           .catch(function(){
-            alert("网络错误，请稍后重试。");
+            ElMessage.error("网络错误，请稍后重试。");
           })
       /*
       axios.post('{{base_url}}/accounts/',
@@ -154,10 +159,14 @@ export default {
   position: relative;
 }
 #mainBlock{
+  position: relative;
   margin:0 auto;
-  background-color: rgba(255, 255, 255, 0.8);;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  top:-26px;
   width:100%;
   text-align: center;
+  z-index: 0;
   height: calc(100vh - 150px);
 }
 

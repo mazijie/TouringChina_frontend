@@ -237,7 +237,12 @@ export default {
             "passwd":this.password
           })
           .then((response) => { // 使用箭头函数
-            if (response.data.result !== 0) return;
+            if (response.data.result !== 0)
+            {
+              ElMessage.error(response.data.message);
+              return;
+            }
+
             const user = this.username;
             const jwt = response.data.jwt;
             if(jwt===null||jwt===undefined) return;
@@ -272,7 +277,11 @@ export default {
             "passwd":this.password
           })
           .then((response) => { // 使用箭头函数
-            if (response.data.result !== 0) return;
+            if (response.data.result !== 0)
+            {
+              ElMessage.error(response.data.message);
+              return;
+            }
             const user = this.username;
             const jwt = response.data.jwt;
             this.$store.dispatch('login', user, jwt);

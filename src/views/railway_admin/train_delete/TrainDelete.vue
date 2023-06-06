@@ -1,6 +1,7 @@
 <template>
     <div id="topline"><TopLine/></div>
     <div id="nav"><railway_Navline @turnToWorkspace="turnToWorkspace" @turnToTrainAdd="turnToTrainAdd" @turnTrainDelete="turnTrainDelete" @turnTrainChange="turnTrainChange" @logout="logout"/></div>
+    <div class="main">
     <div class="container">
         <h1>删减车次</h1>
         <div class="schedule-details">
@@ -39,6 +40,7 @@
 
         <button class="delete-button" @click="deleteSchedule">删除车次</button>
     </div>
+    </div>
   <div class="footer">
     <p>&copy; 2023 畅游中国. All rights reserved. | 联系电话: 15566293351</p>
   </div>
@@ -74,9 +76,13 @@ export default {
 </script>
 
 <style>
+.main{
+    width: 100%;
+    height: 100vh;
+    background-color:rgba(255,255,255,0.15);
+}
 .container {
-  height: calc(100vh - 150px);
-    /*max-width: 500px;*/
+    max-width: 400px;
     margin: 0 auto;
     padding: 50px;
 }
@@ -86,7 +92,7 @@ h1 {
 }
 
 .schedule-details {
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
     border: 1px solid #ccc;
     padding: 10px;

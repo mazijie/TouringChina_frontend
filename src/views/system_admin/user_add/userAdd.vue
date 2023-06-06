@@ -118,7 +118,7 @@ export default {
       axios.post('api/users/',
           {
             "name":this.userName,
-            "password":this.password,
+            "passwd":this.password,
             "email":this.email,
             "role":roles
           }, {headers: {'jwt': `${this.jwt}`}})

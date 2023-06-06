@@ -10,7 +10,7 @@
         <tbody>
         <tr>
           <th class="vertical-header">乘车人姓名</th>
-          <td>{{username}}</td>
+          <td>{{bill.contact.name}}</td>
         </tr>
         <tr v-if="bill.schedule">
           <th class="vertical-header">乘坐车次</th>
@@ -39,9 +39,9 @@
         </tbody>
       </table>
       <div id="buttons">
-        <button style="background-color: #f6bf0b; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;" @click="returnticket(bill)"  v-if="((!bill.schedule)||checktime(bill.schedule.departure_time)&&(bill.is_paid))">退票</button>
+        <button style="background-color: #f6bf0b; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;" @click="returnticket()"  v-if="((!bill.schedule)||checktime(bill.schedule.departure_time)&&(bill.is_paid))">退票</button>
         &nbsp;
-        <button @click="changeticket(bill)" style="background-color: #24c6e3; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"  v-if="((!bill.schedule)||checktime(bill.schedule.departure_time)&&(bill.is_paid))">改签</button>
+        <button @click="changeticket()" style="background-color: #24c6e3; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"  v-if="((!bill.schedule)||checktime(bill.schedule.departure_time)&&(bill.is_paid))">改签</button>
         &nbsp;
         <a href="/orderlist"><button style="background-color: rgba(49,79,222,0.21); color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">返回</button></a>
       </div>
@@ -55,8 +55,8 @@
 <script>
 import TopLine from "@/components/common/TopLine.vue";
 import NavLine from "@/components/common/NavLine.vue";
-import axios from "axios";
-import {ElMessage} from "element-plus";
+// import axios from "axios";
+// import {ElMessage} from "element-plus";
 
 export default {
   name: "OrderDetails",
@@ -84,21 +84,24 @@ export default {
     }
   },
   methods:{
-    returnticket(bill)
+    returnticket()
     {
-      axios.delete(`/api/tickets/${bill.id}`, {headers:{'jwt': `${this.jwt}`}})
-          .then((response)=>
-          {
-            switch (response.data.result){
-              case 0:
-                ElMessage({message:response.data.message,type:'success'});
-                this.$router.push('/orderlist');
-                break;
-              default:
-                ElMessage.error(response.data.message);
-            }
-          })
-          .catch(()=>{ElMessage.error("出现一点问题……");})
+        this.$store.commit('setTicketID', this.bill.id);
+        localStorage.setItem('ticketID',this.bill.id);
+        this.$router.push('/deleteticket');
+      // axios.delete(`/api/tickets/${bill.id}`, {headers:{'jwt': `${this.jwt}`}})
+      //     .then((response)=>
+      //     {
+      //       switch (response.data.result){
+      //         case 0:
+      //           ElMessage({message:response.data.message,type:'success'});
+      //           this.$router.push('/orderlist');
+      //           break;
+      //         default:
+      //           ElMessage.error(response.data.message);
+      //       }
+      //     })
+      //     .catch(()=>{ElMessage.error("出现一点问题……");})
     },
     changeticket()
     {
@@ -127,12 +130,14 @@ export default {
 }
 
 #mainBlock{
+  position: relative;
   margin:0 auto;
+  padding: 0;
   background-color: rgba(255, 255, 255, 0.8);
-  top:150px;
+  top:-26px;
   width:100%;
   text-align: center;
-  z-index: 10;
+  z-index: 0;
   height: calc(100vh - 150px);
 }
 

@@ -71,10 +71,12 @@ export default {
       if(this.accountName===null)
       {
         ElMessage({message:"请填写账户名称",type:'warning'});
+        return;
       }
       if(this.accountID===null)
       {
         ElMessage({message:"请填写银行卡号",type:'warning'});
+        return;
       }
       axios.post('api/accounts/',
           {
@@ -92,9 +94,6 @@ export default {
               ElMessage({message:response.data.message,type:'success'});
             }
           })
-          .catch(function(){
-            ElMessage.error("网络错误，请稍后重试。");
-          })
     }
   }
 }
@@ -108,11 +107,15 @@ export default {
   position: relative;
 }
 #mainBlock{
+  position: relative;
   margin:0 auto;
-  height: calc(100vh - 150px);
-  background-color: rgba(255, 255, 255, 0.8);;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  top:-26px;
   width:100%;
   text-align: center;
+  z-index: 0;
+  height: calc(100vh - 150px);
 }
 
 #introduceWord{

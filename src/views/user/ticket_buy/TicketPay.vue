@@ -55,11 +55,11 @@
       <br><br>
       <div :key="ticketAmount" style="margin: 0 auto; text-align: center">
         <span>付款账户：</span>
-        <el-select v-model="account" placeholder="请选择一个账户" :key="ticketAmount">
+        <el-select v-model="account" placeholder="请选择一个账户">
           <el-option
               v-for="item in accounts"
               :key="item.id"
-              :label="item.name"
+              :label="item.name+'(剩余'+item.amount+'元)'"
               :value="item.id"
           />
         </el-select>
@@ -138,6 +138,10 @@ export default {
   },
 
   methods:{
+    enough(amount)
+    {
+      return amount>=this.ticketAmount;
+    },
     // eslint-disable-next-line no-unused-vars
     pay(id)
     {
@@ -171,12 +175,13 @@ export default {
 }
 
 #mainBlock{
+  position: relative;
   margin:0 auto;
+  padding: 0;
   background-color: rgba(255, 255, 255, 0.8);
-  top:0px;
   width:100%;
   text-align: center;
-  z-index: 10;
+  z-index: 0;
   height: calc(100vh - 150px);
 }
 

@@ -9,11 +9,13 @@
       </div>-->
     </div>
     <div id="secondFloor">
-      <div class="bill-grid">
-        <p v-if="this.bills.length===0">您当前暂无订单，快去买票吧！</p>
+      <div v-if="this.bills.length===0" style="margin: 0 auto;margin-top:50px">
+        <p>您当前暂无订单，快去买票吧！</p>
         <a href="/homepage">
           <button v-if="this.bills.length===0" style="background-color: rgb(102,185,222); color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">去买票</button>
         </a>
+      </div>
+      <div v-else class="bill-grid">
         <div class="bill" v-for="bill in bills" :key="bill.id">
           <div class="billInfo">
             <p class="id">{{bill.id}}</p>
@@ -149,12 +151,14 @@ export default {
 }
 
 #mainBlock{
+  position: relative;
   margin:0 auto;
+  padding: 0;
   background-color: rgba(255, 255, 255, 0.8);
-  top:150px;
-  width:1400px;
+  top:-26px;
+  width:100%;
   text-align: center;
-  z-index: 10;
+  z-index: 0;
   height: calc(100vh - 150px);
 }
 
@@ -188,15 +192,15 @@ export default {
   position: relative;
   top:0px;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
   display: flex;
 }
 
 
 .bill-grid {
   position: relative;
+  margin: 0 auto;
   top:50px;
-  left:200px;
   width:1000px;
   display: grid;
   grid-template-rows: repeat(7, 1fr);

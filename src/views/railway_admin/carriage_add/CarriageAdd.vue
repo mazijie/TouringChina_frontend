@@ -1,30 +1,51 @@
 <template>
     <div id="topline"><TopLine/></div>
     <div id="nav"><railway_Navline @turnToTrainAdd="turnToTrainAdd" @turnToWorkspace="turnToWorkspace" @turnTrainDelete="turnTrainDelete" @turnTrainChange="turnTrainChange" @logout="logout"/></div>
-    <div class="add-carriage">
-        <h1>添加车厢</h1>
-        <form @submit.prevent="submitForm">
-            <label for="name">车厢名：</label>
-            <input type="text" id="name" v-model="carriage.name" required>
+    <div class="main">
+      <el-row style="width: 100%">
+        <el-col :span="12">
+          <div class="schedule-list" style="width: 100%;">
+            <h1 style="top:50px">车厢列表</h1>
+            <el-table :data="carriages" style="margin: 0 auto;top:50px;width: 600px" max-height="80vh">
+              <el-table-column prop="id" label="CID" width="100px"></el-table-column>
+              <el-table-column prop="name" label="类型名称" width="200px"></el-table-column>
+              <el-table-column prop="seat_num" label="座位数量" width="150px"></el-table-column>
+              <el-table-column prop="increase_rate" label="席位加价率" width="150px"></el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="add-carriage">
+            <h1>添加车厢</h1>
+            <form @submit.prevent="submitForm">
+              <label for="name"><b>车厢名：</b></label>
+              <input type="text" id="name" v-model="carriage.name" required>
 
-            <label for="seatNum">座位数量：</label>
-            <input type="number" id="seatNum" v-model="carriage.seatNum" required>
+              <label for="seatNum"><b>座位数量：</b></label>
+              <input type="number" id="seatNum" v-model="carriage.seatNum" required>
 
-            <label for="increase_rate">席位加价率：</label>
-            <input type="number" id="increase_rate" v-model="carriage.increase_rate" required>
-            <input type="button" value="添加车厢" @click="addCarriage" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"/>&nbsp;&nbsp;
-            <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-        </form>
+              <label for="increase_rate"><b>席位加价率：</b></label>
+              <input type="number" id="increase_rate" v-model="carriage.increase_rate" required>
+              <input type="button" value="添加车厢" @click="addCarriage" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"/>&nbsp;&nbsp;
+              <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+            </form>
+          </div>
+        </el-col>
+      </el-row>
+
+
     </div>
   <div class="footer">
     <p>&copy; 2023 畅游中国. All rights reserved. | 联系电话: 15566293351</p>
   </div>
+
 </template>
 
 <script>
 import TopLine from "@/components/common/TopLine.vue";
 import railway_Navline from "@/components/common/railway_Navline.vue";
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 export default {
     components: {railway_Navline, TopLine},
@@ -42,7 +63,8 @@ export default {
                 name: '',
                 seatNum: null,
                 increase_rate : null
-            }
+            },
+          carriages:[]
         };
     },
     mounted() {
@@ -55,24 +77,33 @@ export default {
         if(jwt){
             this.$store.commit('setJwt', jwt);
         }
+      axios.get('api/schedules/carriages',
+          {
+            headers:{'jwt': `${this.jwt}`}
+          })
+          .then((response)=>
+          {
+            this.carriages=response.data.carriages;
+          })
     },
     methods: {
         addCarriage() {
             if(this.user==="null"){
-                alert("登录已过期，请重新登录");
+                ElMessage({message:"登录已过期，请重新登录",type:'warning'});
                 this.$store.dispatch('logout');
                 localStorage.setItem('username', null);
                 this.$router.push('/');
                 return;
             }
-            if(this.carriage.name==='') {
+            /*if(this.carriage.name==='') {
                 alert("请填写车厢名");
             }
             if(this.carriage.seatNum===null) {
                 alert("请填写座位数量");
-            }
-            if(this.carriage.increase_rate===null) {
-                alert("请填写座位加席率");
+            }*/
+            if(this.carriage.increase_rate<0) {
+                ElMessage({message:"席位加价率不能小于0",type:'warning'});
+                return;
             }
             axios.post('api/schedules/carriages',
                 {
@@ -82,14 +113,14 @@ export default {
                 },{headers:{'jwt': `${this.jwt}`}})
                 .then(function(response){
                     if(response.data.result!==0) {
-                        alert(response.data.message);
+                        ElMessage.error(response.data.message);
                     }
                     else {
-                        alert("添加成功！");
+                        ElMessage({message:response.data.message,type:'success'});
                     }
                 })
                 .catch(function(){
-                    alert("网络错误，请稍后重试。");
+                    ElMessage.error("网络错误，请稍后重试。");
                 })
         }
     }
@@ -97,13 +128,18 @@ export default {
 </script>
 
 <style scoped>
+.main{
+    width: 100%;
+  min-height: calc(100vh - 200px);
+    background-color:rgba(255,255,255,0.65);
+}
 .add-carriage {
-  height: calc(100vh - 150px);
     max-width: 400px;
-    margin: 150px auto;
+    top: 20px;
+    margin: 0px auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    /*//border: 1px solid #ccc;*/
+    /*//border-radius: 4px;*/
 }
 
 label {
@@ -141,7 +177,6 @@ button {
   text-decoration: none;
   margin-left: 10px;
 }
-
 .footer {
   left: 0;
   bottom: 0;

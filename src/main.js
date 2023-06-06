@@ -32,7 +32,7 @@ import UserAdd from "@/views/system_admin/user_add/userAdd.vue";
 import UserChange from "@/views/system_admin/user_change/userChange.vue";
 import UserList from "@/views/system_admin/user_list/userList.vue";
 import MessageList from "@/views/user/message_list/MessageList.vue";
-
+import DeleteTicket from "@/views/user/order_details/DeleteTicket.vue";
 
 // ...
 const router = createRouter({
@@ -62,7 +62,8 @@ const router = createRouter({
         { path: '/userchange',component:UserChange},
         { path: '/userlist',component:UserList},
         { path: '/messagelist',component:MessageList},
-        { path: '/:pathMatch(.*)*',redirect:'/'}
+        { path: '/:pathMatch(.*)*',redirect:'/'},
+        { path: '/deleteticket',component: DeleteTicket}
         // ... 其他路由规则
     ]
 });

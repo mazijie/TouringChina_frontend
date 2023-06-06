@@ -30,7 +30,7 @@
             </el-table-column>
             <el-table-column label="座位类型" width="500px">
               <template v-slot="{ row }">
-                <el-button @click="showdetails(row,carriage.carriage.id)" type="primary" style="margin: 10px" v-for="carriage in row.carriages" :key="carriage.carriage.id">{{carriage.carriage.name}}&nbsp;余{{carriage.rest_seats}}张</el-button>
+                <el-button :disabled="carriage.rest_seats===0" @click="showdetails(row,carriage.carriage.id)" type="primary" style="margin: 10px" v-for="carriage in row.carriages" :key="carriage.carriage.id">{{carriage.carriage.name}}&nbsp;余{{carriage.rest_seats}}张</el-button>
               </template>
             </el-table-column>
           </el-table>

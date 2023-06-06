@@ -1,23 +1,32 @@
 <template>
     <div id="topline"><TopLine/></div>
     <div id="nav"><railway_Navline @turnToTrainAdd="turnToTrainAdd" @turnTrainDelete="turnTrainDelete" @turnTrainChange="turnTrainChange" @logout="logout"/></div>
+    <div class="main">
     <div class="add-schedule">
         <h1>调整车次</h1>
+        <el-steps :active="a" finish-status="success">
+            <el-step title="确认是否删除" style="text-align: left"></el-step>
+            <el-step title="选择站点" style="text-align: left"></el-step>
+            <el-step title="选择车厢" style="text-align: left"></el-step>
+            <el-step title="设置时间" style="text-align: left"></el-step>
+        </el-steps>
         <div class="form-container">
             <form @submit.prevent="submitForm">
-                <label for="scheduleNo">车次编号：</label>
-                {{schedule_id}}
-                <br><br>
-
-                <label for="makesure">请确认是否调整 如不修改请点击返回</label>
+                <div v-if="a === 0">
+                    <form @submit.prevent="submitFormStep1">
+                        <br><br>
+                <label for="makesure">请确认是否调整 如不修改请点击返回!</label>
                 <div class="button-container">
                     <a href="/workspace"><input type="button" value="返回" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"/></a>
                 </div>
-
-                <label for="stationIds">车站编号：</label>
+                    </form>
+                </div>
+                <div v-if="a === 1">
+                    <form @submit.prevent="submitFormStep2">
+                <label for="stationIds"><b>车站编号：</b></label>
                 <div v-for="(fieldIndex, index) in stationFields" :key="index">
                     <div class="button-container">
-                        <select v-model="schedule.stationIds[fieldIndex]" id="select-box" style="width: 320px; padding: 10px">
+                        <select v-model="schedule.stationIds[fieldIndex]" id="select-box" style="width: 400px; padding: 10px">
                             <option :value="station.id" v-for="station in stations" :key="station.id">{{ station.name }}</option>
                         </select>
                     </div>
@@ -27,11 +36,14 @@
                     <span class="button-spacing"></span>
                     <input type="button" value="删除车站" @click="deleteStationField()" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"/>
                 </div>
-
-                <label for="carriageIds">车厢编号：</label>
+                    </form>
+                </div>
+                <div v-if="a === 2">
+                    <form @submit.prevent="submitFormStep3">
+                <label for="carriageIds"><b>车厢编号：</b></label>
                 <div v-for="(fieldIndex, index) in carriageFields" :key="index">
                     <div class="button-container">
-                        <select v-model="schedule.carriageIds[fieldIndex]" id="select-box" style="width: 320px; padding: 10px">
+                        <select v-model="schedule.carriageIds[fieldIndex]" id="select-box" style="width: 400px; padding: 10px">
                             <option :value="carriage.id" v-for="carriage in carriages" :key="carriage.id">{{ carriage.name }}</option>
                         </select>
                     </div>
@@ -41,11 +53,14 @@
                     <span class="button-spacing"></span>
                     <input type="button" value="删除车厢" @click="deleteCarriageField()" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"/>
                 </div>
-
-                <label for="departureTime">出发时间：</label>
+                    </form>
+                </div>
+                <div v-if="a === 3">
+                    <form @submit.prevent="submitFormStep4">
+                <label for="departureTime"><b>出发时间：</b></label>
                 <input type="datetime-local" id="departureTime" v-model="schedule.departureTime" required>
 
-                <label for="arrivalTimes">到达时间：</label>
+                <label for="arrivalTimes"><b>到达时间：</b></label>
                 <div v-for="(arrivalTime, index) in schedule.arrivalTimes" :key="index">
                     <input type="datetime-local" v-model="schedule.arrivalTimes[index]" required>
                 </div>
@@ -56,10 +71,15 @@
                     <input type="button" value="删除到达时间" @click="deleteArrivalTimeField()" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"/>
                 </div>
 
-                <input type="button" value="修改车次" @click="changeTrain" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"/>&nbsp;&nbsp;
+                <input type="button" value="确认修改" @click="changeTrain" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"/>&nbsp;&nbsp;
+                    </form>
+                </div>
+                <el-button v-if="a!==0" style="margin-top: 12px" @click="last()" >上一步</el-button>
+                <el-button v-if="a!==3" style="margin-top: 12px" @click="next()" >下一步</el-button>
                 <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
             </form>
         </div>
+    </div>
     </div>
   <div class="footer">
     <p>&copy; 2023 畅游中国. All rights reserved. | 联系电话: 15566293351</p>
@@ -70,6 +90,7 @@
 import TopLine from "@/components/common/TopLine.vue";
 import railway_Navline from "@/components/common/railway_Navline.vue";
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 export default {
     components: {railway_Navline, TopLine},
@@ -97,6 +118,7 @@ export default {
             carriageFields:[0],
             stations:[],
             carriages:[],
+            a:0,
         };
     },
     mounted() {
@@ -130,6 +152,14 @@ export default {
             })
     },
     methods: {
+        next(){
+            this.a++;
+            if (this.a > 3)
+                this.a = 0;
+        },
+        last(){
+            this.a--;
+        },
         addArrivalTimeField(index) {
             this.schedule.arrivalTimes.splice(index + 1, 0, '');
         },
@@ -162,7 +192,7 @@ export default {
                 this.$router.push('/');
                 return;
             }
-            if(this.schedule.stationIds===null) {
+            /*if(this.schedule.stationIds===null) {
                 alert("请填写车站编号");
             }
             if(this.schedule.carriageIds===null) {
@@ -170,15 +200,14 @@ export default {
             }
             if(this.schedule.departureTime===null) {
                 alert("请填写出发时间");
-            }
-            if(this.schedule.arrivalTimes===null) {
-                alert("请填写到达时间");
-            }
-            if(this.schedule.arrivalTimes[0]!==this.schedule.departureTime) {
-                alert("请确保第一个到达时间与出发时间相同");
+            }*/
+            if(this.schedule.arrivalTimes[0]!==this.schedule.departureTime){
+                ElMessage({message:"请确保第一个到达时间与出发时间相同",type:'warning'});
+                return ;
             }
             if(this.stationFields.length!==this.schedule.arrivalTimes.length){
-                alert("请保证站点数量与到达时间对应");
+                ElMessage({message:"请保证站点数量与到达时间对应",type:'warning'});
+                return;
             }
             axios.put(`api/schedules/${this.schedule_id}`,
                 {
@@ -190,14 +219,14 @@ export default {
                 },{headers:{'jwt': `${this.jwt}`}})
                 .then(function(response){
                     if(response.data.result!==0) {
-                        alert(response.data.message);
+                        ElMessage.error(response.data.message);
                     }
                     else {
-                        alert("修改成功！");
+                        ElMessage({message:response.data.message,type:'success'});
                     }
                 })
                 .catch(function(){
-                    alert("网络错误，请稍后重试。");
+                    ElMessage.error("请确认信息！");
                 })
         }
     }
@@ -205,17 +234,21 @@ export default {
 </script>
 
 <style scoped>
+.main{
+    width: 100%;
+    height: 100vh;
+    background-color:rgba(255,255,255,0.15);
+}
 .add-schedule {
-  height: calc(100vh - 150px);
-    max-width: 350px;
-    margin: 150px auto;
-    padding: 40px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    max-width: 400px;
+    margin:0px auto;
+    padding: 20px;
+    //border: 1px solid #ccc;
+    //border-radius: 4px;
 }
 
 .form-container {
-    max-height: 350px; /* 设置适当的高度 */
+    max-height: 60vh; /* 设置适当的高度 */
     overflow-y: auto;
 }
 
@@ -224,7 +257,9 @@ export default {
     color: green;
 }
 
-
+.datetime-local{
+    width:400px;
+}
 label {
     display: block;
     margin-bottom: 20px;
@@ -232,7 +267,7 @@ label {
 
 input[type="text"],
 input[type="datetime-local"] {
-    width: 90%;
+    width: 400px;
     padding: 10px;
     font-size: 14px;
     border-radius: 4px;

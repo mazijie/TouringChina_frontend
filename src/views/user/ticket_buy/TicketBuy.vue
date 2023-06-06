@@ -60,9 +60,9 @@
                     <tr>
                         <th class="vertical-header">价格</th>
                         <td>
-                            <div v-for="carriage in schedule.carriages" :key="carriage.carriage.id">
+<!--                            <div v-for="carriage in schedule.carriages" :key="carriage.carriage.id">-->
                                 {{price}}
-                                </div>
+<!--                                </div>-->
                             </td>
                     </tr>
                     </tbody>
@@ -218,12 +218,14 @@ export default {
 }
 
 #mainBlock{
-    margin:0 auto;
-    background-color: rgba(255, 255, 255, 0.8);
-    top:50px;
-    width:100%;
-    text-align: center;
-    z-index: 10;
+  position: relative;
+  margin:0 auto;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  top:-26px;
+  width:100%;
+  text-align: center;
+  z-index: 0;
   height: calc(100vh - 150px);
 }
 
