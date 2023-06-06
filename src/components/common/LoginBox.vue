@@ -132,7 +132,8 @@ export default {
           {
             "name": this.username,
             "passwd":this.password,
-            "email":this.email
+            "email":this.email,
+            "host":window.location.hostname
           })
           .then(function(response){
             if(response.data.result===0)
