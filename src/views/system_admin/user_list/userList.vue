@@ -94,7 +94,7 @@ export default {
 
       methods: {
           updateUser(teUser) {
-              if (teUser.id === 8) {
+              if (teUser.id === 1) {
                   ElMessage.error("无法修改根用户信息");
               }
           else {
@@ -107,7 +107,7 @@ export default {
       },
 
           deleteUser(id) {
-              if (id === 8) {
+              if (id === 1) {
                   ElMessage.error("无法删除根用户");
                   return;
           }
