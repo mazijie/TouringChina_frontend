@@ -39,7 +39,7 @@
         </tbody>
       </table>
       <div id="buttons">
-        <button style="background-color: #f6bf0b; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;" @click="returnticket()"  v-if="((!bill.schedule)||checktime(bill.schedule.departure_time)&&(bill.is_paid))">退票</button>
+        <button style="background-color: #f6bf0b; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;" @click="returnticket()"  v-if="((bill.schedule)&&checktime(bill.schedule.departure_time)&&(bill.is_paid))">退票</button>
         &nbsp;
         <button @click="changeticket()" style="background-color: #24c6e3; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;"  v-if="((!bill.schedule)||checktime(bill.schedule.departure_time)&&(bill.is_paid))">改签</button>
         &nbsp;
